@@ -6,9 +6,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.hamcrest.Description;
+import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 
 /**
  * 
@@ -16,33 +15,24 @@ import org.hamcrest.TypeSafeMatcher;
  *
  * @param <T>
  */
-public class ColumnValueMatcher<T> extends TypeSafeMatcher<Put> {
+public class ColumnValueMatcher<T> extends FeatureMatcher<Put, T> {
+
+	private static final String NAME = "";
+	
+	private static final String DESCRIPTION = "";
 
 	private final byte[] columnFamilyBytes;
 	
 	private final byte[] columnQualifierBytes;
-
-	private final Matcher<T> expectedValueMatcher;
 	
 	private final Class<T> valueClass;
 	
 	public ColumnValueMatcher(byte[] columnFamily, byte[] columnQualifier,
-			Matcher<T> expectedValue, Class<T> valueClass) {
+			Matcher<? super T> subMatcher, Class<T> valueClass) {
+		super(subMatcher, NAME, DESCRIPTION);
 		this.columnFamilyBytes = columnFamily;
 		this.columnQualifierBytes = columnQualifier;
-		this.expectedValueMatcher = expectedValue;
 		this.valueClass = valueClass;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.hamcrest.TypeSafeMatcher#matchesSafely(java.lang.Object)
-	 */
-	@Override
-	protected boolean matchesSafely(Put put) {
-		T value = getColumnValue(put);
-		return value != null 
-				&& expectedValueMatcher.matches(value);
 	}
 
 	/**
@@ -51,8 +41,8 @@ public class ColumnValueMatcher<T> extends TypeSafeMatcher<Put> {
 	 * @param put
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	protected T getColumnValue(Put put) {
+	@Override @SuppressWarnings("unchecked")
+	protected T featureValueOf(Put put) {
 		List<KeyValue> list = put.get(this.columnFamilyBytes, this.columnQualifierBytes);
 		if (CollectionUtils.isNotEmpty(list)) {
 			KeyValue kv = list.get(0);
@@ -81,12 +71,4 @@ public class ColumnValueMatcher<T> extends TypeSafeMatcher<Put> {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
-	 */
-	@Override
-	public void describeTo(Description description) {
-		description.appendText("Expected ").appendValue(expectedValueMatcher);
-	}
 }

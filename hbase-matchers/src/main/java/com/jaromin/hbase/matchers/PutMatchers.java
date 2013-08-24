@@ -54,9 +54,9 @@ public class PutMatchers {
 		return new ColumnValueMatcher<T>(Bytes.toBytes(columnParts[0]), 
 				Bytes.toBytes(columnParts[1]), matcher, clazz);
 	}
-	
-	public static ColumnValueMatcher<byte[]> hasColumnValue(String column, Matcher<byte[]> matcher) {
-		return hasColumnValue(column, matcher, byte[].class);
+
+	public static ColumnValueMatcher<String> hasColumnValue(String column, Matcher<String> matcher) {
+		return hasColumnValue(column, matcher, String.class);
 	}
 
 	public static ColumnValueMatcher<byte[]> hasBytesColumnValue(String column, Matcher<byte[]> matcher) {

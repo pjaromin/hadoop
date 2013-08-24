@@ -56,7 +56,7 @@ public class ColumnValueMatcherTest {
 			= PutMatchers.hasColumnValue("a:bytes", valueMatcher, byte[].class);
 		assertThat(matcher.matches(this.put), is(true));
 		
-		matcher = PutMatchers.hasColumnValue("a:bytes", valueMatcher);
+		matcher = PutMatchers.hasColumnValue("a:bytes", valueMatcher, byte[].class);
 		assertThat(matcher.matches(this.put), is(true));
 	}
 	
@@ -68,7 +68,7 @@ public class ColumnValueMatcherTest {
 		ColumnValueMatcher<String> matcher 
 			= PutMatchers.hasColumnValue(colName, valueMatcher, String.class);
 		assertThat(matcher.matches(this.put), is(true));
-		
+
 		matcher = PutMatchers.hasStringColumnValue(colName, expectedValue);
 		assertThat(matcher.matches(this.put), is(true));
 	}
