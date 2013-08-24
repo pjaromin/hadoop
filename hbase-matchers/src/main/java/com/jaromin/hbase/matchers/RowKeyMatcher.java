@@ -1,47 +1,56 @@
 package com.jaromin.hbase.matchers;
 
 import org.apache.hadoop.hbase.client.Put;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 
 /**
  * 
  * @author Patrick Jaromin <patrick@jaromin.com>
  *
  */
-public class RowKeyMatcher extends TypeSafeMatcher<Put> {
+public class RowKeyMatcher<T> extends FeatureMatcher<Put, T> {
+
+	public static final String NAME = "Put Row Key";
 	
-	private final byte[] expected;
-	
-	private final String describeValue;
-	
-	/**
-	 * 
-	 * @param expected
-	 * @param describeValue
-	 */
-	public RowKeyMatcher(byte[] expected, String describeValue) {
-		this.expected = expected;
-		this.describeValue = describeValue;
+	public static final String DESCRIPTION = "row key";
+
+	private final Class<T> valueClass;
+
+	public RowKeyMatcher(Matcher<? super T> subMatcher, Class<T> valueClass) {
+		super(subMatcher, NAME, DESCRIPTION);
+		this.valueClass = valueClass;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.hamcrest.TypeSafeMatcher#matchesSafely(java.lang.Object)
+	 * @see org.hamcrest.FeatureMatcher#featureValueOf(java.lang.Object)
 	 */
-	@Override
-	protected boolean matchesSafely(Put put) {
-		return put.getRow() == this.expected;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
-	 */
-	@Override
-	public void describeTo(Description description) {
-		description.appendText("Expected row key of ")
-				.appendValue(this.describeValue);
+	@Override @SuppressWarnings("unchecked")
+	protected T featureValueOf(Put put) {
+		byte[] bytes = put.getRow();
+		if (byte[].class.equals(this.valueClass)) {
+			return (T)bytes;
+		} else if (String.class.equals(this.valueClass)) {
+			return (T)Bytes.toString(bytes);
+		}
+		else if (Long.class.equals(this.valueClass)) {
+			return (T)Long.valueOf(Bytes.toLong(bytes));
+		}
+		else if (Double.class.equals(this.valueClass)) {
+			return (T)Double.valueOf(Bytes.toDouble(bytes));
+		}
+		else if (Float.class.equals(this.valueClass)) {
+			return (T)Float.valueOf(Bytes.toFloat(bytes));
+		}
+		else if (Integer.class.equals(this.valueClass)) {
+			return (T)Integer.valueOf(Bytes.toInt(bytes));
+		}
+		else if (Short.class.equals(this.valueClass)) {
+			return (T)Short.valueOf(Bytes.toShort(bytes));
+		}
+		return null;
 	}
 
 }

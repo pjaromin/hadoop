@@ -111,7 +111,7 @@ public class ColumnValueMatcherTest {
 		matcher = PutMatchers.hasFloatColumnValue(colName, expectedValue);
 		assertThat(matcher.matches(this.put), is(true));
 	}
-	
+
 	@Test
 	public void testMatchesPut_Integer() {
 		Matcher<Integer> valueMatcher = CoreMatchers.is(100);

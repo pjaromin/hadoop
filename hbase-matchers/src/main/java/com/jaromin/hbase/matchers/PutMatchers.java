@@ -1,9 +1,10 @@
 package com.jaromin.hbase.matchers;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Matcher;
-import static org.hamcrest.CoreMatchers.*;
 
 /**;
  * 
@@ -12,36 +13,40 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class PutMatchers {
 
-	public static T RowKeyMatcher<T> hasRowKey(Matcher<T> expected) {
-		return new RowKeyMatcher<T>(expected);
-	}
-	
-	public static RowKeyMatcher hasRowKey(byte[] expected) {
-		return new RowKeyMatcher(expected, expected.toString());
-	}
-	
-	public static RowKeyMatcher hasRowKey(Long expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
-	}
-	
-	public static RowKeyMatcher hasRowKey(Double expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
-	}
-	
-	public static RowKeyMatcher hasRowKey(Float expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
+	public static <T> RowKeyMatcher<T> hasRowKey(Matcher<T> expected, Class<T> typeClass) {
+		return new RowKeyMatcher<T>(expected, typeClass);
 	}
 
-	public static RowKeyMatcher hasRowKey(Integer expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
+	public static RowKeyMatcher<byte[]> hasRowKey(byte[] expected) {
+		return hasRowKey( is(expected), byte[].class);
 	}
 	
-	public static RowKeyMatcher hasRowKey(Short expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
+	public static RowKeyMatcher<String> hasRowKey(String expected) {
+		return hasRowKey( is(expected), String.class);
+	}
+	
+	public static RowKeyMatcher<String> hasRowKey(Matcher<String> expected) {
+		return hasRowKey( is(expected), String.class);
+	}
+	
+	public static RowKeyMatcher<Long> hasRowKey(Long expected) {
+		return hasRowKey( is(expected), Long.class);
+	}
+	
+	public static RowKeyMatcher<Double> hasRowKey(Double expected) {
+		return hasRowKey( is(expected), Double.class);
+	}
+	
+	public static RowKeyMatcher<Float> hasRowKey(Float expected) {
+		return hasRowKey( is(expected), Float.class);
 	}
 
-	public static RowKeyMatcher hasRowKey(String expected) {
-		return new RowKeyMatcher(Bytes.toBytes(expected), "" + expected);
+	public static RowKeyMatcher<Integer> hasRowKey(Integer expected) {
+		return hasRowKey( is(expected), Integer.class);
+	}
+	
+	public static RowKeyMatcher<Short> hasRowKey(Short expected) {
+		return hasRowKey( is(expected), Short.class);
 	}
 	
 	public static <T> ColumnValueMatcher<T> hasColumnValue(String column, Matcher<T> matcher, Class<T> clazz) {
