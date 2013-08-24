@@ -1,7 +1,6 @@
 package com.jaromin.hbase.matchers;
 
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 
@@ -27,30 +26,10 @@ public class RowKeyMatcher<T> extends FeatureMatcher<Put, T> {
 	 * (non-Javadoc)
 	 * @see org.hamcrest.FeatureMatcher#featureValueOf(java.lang.Object)
 	 */
-	@Override @SuppressWarnings("unchecked")
+	@Override
 	protected T featureValueOf(Put put) {
 		byte[] bytes = put.getRow();
-		if (byte[].class.equals(this.valueClass)) {
-			return (T)bytes;
-		} else if (String.class.equals(this.valueClass)) {
-			return (T)Bytes.toString(bytes);
-		}
-		else if (Long.class.equals(this.valueClass)) {
-			return (T)Long.valueOf(Bytes.toLong(bytes));
-		}
-		else if (Double.class.equals(this.valueClass)) {
-			return (T)Double.valueOf(Bytes.toDouble(bytes));
-		}
-		else if (Float.class.equals(this.valueClass)) {
-			return (T)Float.valueOf(Bytes.toFloat(bytes));
-		}
-		else if (Integer.class.equals(this.valueClass)) {
-			return (T)Integer.valueOf(Bytes.toInt(bytes));
-		}
-		else if (Short.class.equals(this.valueClass)) {
-			return (T)Short.valueOf(Bytes.toShort(bytes));
-		}
-		return null;
+		return (T)PutMatchers.valueOf(bytes, this.valueClass);
 	}
 
 }
