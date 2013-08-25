@@ -23,6 +23,6 @@ public class ColumnMatcherTest {
 		Put put = new Put(rowKey);
 		put.add(columnFamily, "column1".getBytes(), "avalue".getBytes());
 
-//		assertThat(put, PutMatchers.hasColumn("d:column1"));
+//		assertThat(put, PutMatchers.hasColumn("d:column1").withValue("string_value", String.class));
 	}
 }

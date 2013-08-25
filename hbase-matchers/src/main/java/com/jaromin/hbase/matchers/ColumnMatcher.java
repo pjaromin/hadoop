@@ -62,4 +62,8 @@ public class ColumnMatcher<T> extends FeatureMatcher<Put, T> {
 		}
 		return null;
 	}
+	
+//	public Matcher<U> withValue(Matcher<U> subMatcher, Class<U> valueClass) {
+//		return new ColumnValueMatcher<U>(this.columnFamilyBytes, this.columnQualifierBytes, valueClass);
+//	}
 }
