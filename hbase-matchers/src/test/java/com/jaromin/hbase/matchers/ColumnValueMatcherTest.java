@@ -1,6 +1,9 @@
 package com.jaromin.hbase.matchers;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -50,14 +53,15 @@ public class ColumnValueMatcherTest {
 	}
 	
 	@Test
+	public void testMatchesPut_Multiple() {
+		
+	}
+	
+	@Test
 	public void testMatchesPut_Bytes() {
 		Matcher<byte[]> valueMatcher = CoreMatchers.is(Bytes.toBytes(100L));
-		ColumnValueMatcher<byte[]> matcher 
-			= PutMatchers.hasColumnValue("a:bytes", valueMatcher, byte[].class);
-		assertThat(matcher.matches(this.put), is(true));
-		
-		matcher = PutMatchers.hasColumnValue("a:bytes", valueMatcher, byte[].class);
-		assertThat(matcher.matches(this.put), is(true));
+		assertThat(put, PutMatchers.hasBytesColumnValue("a:bytes", valueMatcher));
+		assertThat(put, PutMatchers.hasColumnValue("a:bytes", valueMatcher, byte[].class));
 	}
 	
 	@Test
@@ -65,12 +69,8 @@ public class ColumnValueMatcherTest {
 		String colName = "a:string";
 		String expectedValue ="string_value";
 		Matcher<String> valueMatcher = CoreMatchers.is(expectedValue);
-		ColumnValueMatcher<String> matcher 
-			= PutMatchers.hasColumnValue(colName, valueMatcher, String.class);
-		assertThat(matcher.matches(this.put), is(true));
-
-		matcher = PutMatchers.hasStringColumnValue(colName, expectedValue);
-		assertThat(matcher.matches(this.put), is(true));
+		assertThat(put, PutMatchers.hasColumnValue(colName, valueMatcher, String.class));
+		assertThat(put, PutMatchers.hasStringColumnValue(colName, expectedValue));
 	}
 
 	@Test
@@ -78,12 +78,12 @@ public class ColumnValueMatcherTest {
 		String colName = "a:long";
 		Long expectedValue = 100L;
 		Matcher<Long> valueMatcher = CoreMatchers.is(expectedValue);
-		ColumnValueMatcher<Long> matcher 
-			= PutMatchers.hasColumnValue(colName, valueMatcher, Long.class);
-		assertThat(matcher.matches(this.put), is(true));
+		assertThat(put, PutMatchers.hasColumnValue(colName, valueMatcher, Long.class));
+		assertThat(put, PutMatchers.hasLongColumnValue(colName, expectedValue));
 		
-		matcher = PutMatchers.hasLongColumnValue(colName, expectedValue);
-		assertThat(matcher.matches(this.put), is(true));
+		assertThat(put, PutMatchers.hasLongColumnValue(colName, not(10L)));
+		assertThat(put, PutMatchers.hasLongColumnValue(colName, greaterThan(10L)));
+		assertThat(put, PutMatchers.hasLongColumnValue(colName, lessThan(101L)));
 	}
 
 	@Test

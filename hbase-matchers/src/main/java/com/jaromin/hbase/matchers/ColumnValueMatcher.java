@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
  * 
@@ -13,11 +15,15 @@ import org.hamcrest.Matcher;
  *
  * @param <T>
  */
-public class ColumnValueMatcher<T> extends ColumnMatcher<T> {
+public class ColumnValueMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 
-	private static final String NAME = "";
+	protected final byte[] columnFamily;
 	
-	private static final String DESCRIPTION = "";
+	protected final byte[] columnQualifier;
+	
+	protected final Class<T> valueClass;
+
+	private final Matcher<? super T> subMatcher;
 	
 	/**
 	 * 
@@ -28,24 +34,43 @@ public class ColumnValueMatcher<T> extends ColumnMatcher<T> {
 	 */
 	public ColumnValueMatcher(byte[] columnFamily, byte[] columnQualifier,
 			Matcher<? super T> subMatcher, Class<T> valueClass) {
-		super(columnFamily, columnQualifier, subMatcher, NAME, DESCRIPTION, valueClass);
+		this.columnFamily = columnFamily;
+		this.columnQualifier = columnQualifier;
+		this.valueClass = valueClass;
+		this.subMatcher = subMatcher;
 	}
 
-	/**
-	 * Retrieves the value of the configured column 
-	 * from the supplied <tt>Put</tt>.
-	 * @param put
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.TypeSafeDiagnosingMatcher#matchesSafely(java.lang.Object, org.hamcrest.Description)
 	 */
 	@Override
-	protected T featureValueOf(Put put) {
-		List<KeyValue> list = put.get(this.columnFamilyBytes, this.columnQualifierBytes);
-		if (CollectionUtils.isNotEmpty(list)) {
-			KeyValue kv = list.get(0);
-			byte[] valueBytes = kv.getValue();
-			return (T)PutMatchers.valueOf(valueBytes, this.valueClass);
+	protected boolean matchesSafely(Put put, Description mismatch) {
+		List<KeyValue> kvList = put.get(this.columnFamily, this.columnQualifier);
+		if (CollectionUtils.isNotEmpty(kvList)) {
+			int count = 0;
+			for (KeyValue kv : kvList) {
+				byte[] valueBytes = kv.getValue();
+				T value = (T)PutMatchers.valueOf(valueBytes, this.valueClass);
+				if (subMatcher.matches(value)) {
+					return true;
+				}
+	            if (count++ > 0) {
+	            	mismatch.appendText(", ");
+	            }
+	            subMatcher.describeMismatch(value, mismatch);
+			}
 		}
-		return null;
+		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
+	 */
+	@Override
+	public void describeTo(Description description) {
+		description.appendText("has column value").appendText(" ")
+        .appendDescriptionOf(subMatcher);
+	}
 }
