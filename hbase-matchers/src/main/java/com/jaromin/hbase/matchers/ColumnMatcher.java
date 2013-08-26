@@ -58,6 +58,7 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 		int count = 0;
 		String columnName;
 		for (Entry<byte[], List<KeyValue>> family : familyMap.entrySet()) {
+			// Family must be composed of printable characters
 			String familyStr = Bytes.toString(family.getKey());
 			for (KeyValue column : family.getValue()) {
 				String qualifier = Bytes.toString(column.getQualifier());
