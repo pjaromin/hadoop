@@ -80,17 +80,17 @@ public abstract class PutMatchers {
 		return hasRowKey( is(expected), Short.class);
 	}
 	
-	public static <T> ColumnMatcher<T> hasColumn(String column, Class<T> clazz) {
-		String[] columnParts = StringUtils.split(column, ":");
-		return new ColumnMatcher<T>(Bytes.toBytes(columnParts[0]), 
-				Bytes.toBytes(columnParts[1]), matcher, clazz);
-	}
+//	public static <T> ColumnMatcher<T> hasColumn(String column, Class<T> clazz) {
+//		String[] columnParts = StringUtils.split(column, ":");
+//		return new ColumnMatcher<T>(Bytes.toBytes(columnParts[0]), 
+//				Bytes.toBytes(columnParts[1]), matcher, clazz);
+//	}
 	
-	public static ColumnMatcher<String> hasColumn(Matcher<String> matcher) {
-		String[] columnParts = StringUtils.split(column, ":");
-		return new ColumnMatcher<String>(Bytes.toBytes(columnParts[0]), 
-				Bytes.toBytes(columnParts[1]), matcher, String.class); 
-	}
+//	public static ColumnMatcher<String> hasColumn(Matcher<String> matcher) {
+//		String[] columnParts = StringUtils.split(column, ":");
+//		return new ColumnMatcher<String>(Bytes.toBytes(columnParts[0]), 
+//				Bytes.toBytes(columnParts[1]), matcher, String.class); 
+//	}
 
 	public static <T> ColumnValueMatcher<T> hasColumnValue(String column, Matcher<T> matcher, Class<T> clazz) {
 		String[] columnParts = StringUtils.split(column, ":");

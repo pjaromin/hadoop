@@ -53,11 +53,6 @@ public class ColumnValueMatcherTest {
 	}
 	
 	@Test
-	public void testMatchesPut_Multiple() {
-		
-	}
-	
-	@Test
 	public void testMatchesPut_Bytes() {
 		Matcher<byte[]> valueMatcher = CoreMatchers.is(Bytes.toBytes(100L));
 		assertThat(put, PutMatchers.hasBytesColumnValue("a:bytes", valueMatcher));

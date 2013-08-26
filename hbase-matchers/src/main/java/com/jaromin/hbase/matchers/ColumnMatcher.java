@@ -1,12 +1,18 @@
 package com.jaromin.hbase.matchers;
 
-import java.util.List;
+import static org.hamcrest.Matchers.is;
 
-import org.apache.commons.collections.CollectionUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
-import org.hamcrest.FeatureMatcher;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
  * Matches for the presence of a column in the specified {@link Put}
@@ -14,56 +20,75 @@ import org.hamcrest.Matcher;
  *
  * @param <T>
  */
-public class ColumnMatcher<T> extends FeatureMatcher<Put, T> {
+public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 
-	public static final String NAME = "Put Column Matcher";
+	private Matcher<? super T> nameMatcher;
 	
-	public static final String DESCRIPTION = "column family:qualifier";
+	private Class<T> nameTypeClass;
 	
-	protected final byte[] columnFamilyBytes;
-	
-	protected final byte[] columnQualifierBytes;
-	
-	protected final Class<T> valueClass;
+	/**
+	 * 
+	 * @param nameMatcher
+	 * @param nameTypeClass
+	 */
+	public ColumnMatcher(Matcher<T> nameMatcher, Class<T> nameTypeClass) {
+		this.nameMatcher = nameMatcher;
+		this.nameTypeClass = nameTypeClass;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.TypeSafeDiagnosingMatcher#matchesSafely(java.lang.Object, org.hamcrest.Description)
+	 */
+	@Override
+	protected boolean matchesSafely(Put put, Description mismatch) {
+		return findMatches(put, mismatch, true).size() > 0;
+	}
 
 	/**
 	 * 
-	 * @param columnFamily
-	 * @param columnQualifier
-	 * @param subMatcher
-	 * @param valueClass
-	 */
-	public ColumnMatcher(byte[] columnFamily, byte[] columnQualifier,
-			Matcher<? super T> subMatcher, Class<T> valueClass) {
-		this(columnFamily, columnQualifier, subMatcher, NAME, DESCRIPTION, valueClass);
-	}
-	
-	protected ColumnMatcher(byte[] columnFamily, byte[] columnQualifier,
-			Matcher<? super T> subMatcher, String name, String description, Class<T> valueClass) {
-		super(subMatcher, name, description);
-		this.columnFamilyBytes = columnFamily;
-		this.columnQualifierBytes = columnQualifier;
-		this.valueClass = valueClass;
-	}
-
-	/**
-	 * Retrieves the value of the configured column 
-	 * from the supplied <tt>Put</tt>.
 	 * @param put
+	 * @param mismatch
+	 * @param stopOnFirstMatch
 	 * @return
 	 */
-	@Override
-	protected T featureValueOf(Put put) {
-		List<KeyValue> list = put.get(this.columnFamilyBytes, this.columnQualifierBytes);
-		if (CollectionUtils.isNotEmpty(list)) {
-			KeyValue kv = list.get(0);
-			byte[] keyBytes = kv.getKey();
-			return (T)PutMatchers.valueOf(keyBytes, this.valueClass);
+	protected List<KeyValue> findMatches(Put put, Description mismatch, boolean stopOnFirstMatch) {
+		List<KeyValue> matches = new ArrayList<KeyValue>();
+		Map<byte[], List<KeyValue>> familyMap = put.getFamilyMap();
+		int count = 0;
+		String columnName;
+		for (Entry<byte[], List<KeyValue>> family : familyMap.entrySet()) {
+			String familyStr = Bytes.toString(family.getKey());
+			for (KeyValue column : family.getValue()) {
+				String qualifier = Bytes.toString(column.getQualifier());
+				// Match the name using the supplied matcher.
+				columnName = familyStr + ":" + qualifier;
+				if (this.nameMatcher.matches(columnName)) {
+					matches.add(column);
+					if (stopOnFirstMatch) {
+						return matches;
+					}
+				}
+				if (count++ > 0) {
+					mismatch.appendText(", ");
+				}
+				nameMatcher.describeMismatch(columnName, mismatch);
+			}
 		}
-		return null;
+		return matches;
 	}
 	
-//	public Matcher<U> withValue(Matcher<U> subMatcher, Class<U> valueClass) {
-//		return new ColumnValueMatcher<U>(this.columnFamilyBytes, this.columnQualifierBytes, valueClass);
-//	}
+	@Override
+	public void describeTo(Description mismatch) {
+		mismatch.appendText("a column name matching ");
+		nameMatcher.describeTo(mismatch);
+	}
+
+	public static ColumnMatcher<String> column(Matcher<String> matcher) {
+		return new ColumnMatcher<String>(matcher, String.class);
+	}
+
+	public static ColumnMatcher<String> column(String string) {
+		return column(is(string));
+	}
 }
