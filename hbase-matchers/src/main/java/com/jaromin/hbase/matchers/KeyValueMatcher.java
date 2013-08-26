@@ -28,6 +28,7 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 		this(null, columnMatcher, valueMatcher, valueClass);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public KeyValueMatcher(Matcher<Put> rowKeyMatcher, 
 			ColumnMatcher<COL> columnMatcher, Matcher<VAL> valueMatcher, Class<VAL> valueClass) {
 		this.rowKeyMatcher = rowKeyMatcher;
@@ -111,5 +112,65 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 			ColumnMatcher<String> columnMatcher, Matcher<String> valueMatcher) {
 		return new KeyValueMatcher<String, String>(rowKeyMatcher,
 				columnMatcher,valueMatcher,String.class);
+	}
+
+	public static Matcher<Put> hasLongKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Long> valueMatcher) {
+		return new KeyValueMatcher<String, Long>(null, columnMatcher,valueMatcher,Long.class);
+	}
+	
+	public static Matcher<Put> hasLongKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<Long> valueMatcher) {
+		return new KeyValueMatcher<String, Long>(rowKeyMatcher,
+				columnMatcher,valueMatcher,Long.class);
+	}
+
+	public static Matcher<Put> hasDoubleKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Double> valueMatcher) {
+		return new KeyValueMatcher<String, Double>(null, columnMatcher,valueMatcher,Double.class);
+	}
+	
+	public static Matcher<Put> hasDoubleKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<Double> valueMatcher) {
+		return new KeyValueMatcher<String, Double>(rowKeyMatcher,
+				columnMatcher,valueMatcher,Double.class);
+	}
+	
+	public static Matcher<Put> hasIntegerKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Integer> valueMatcher) {
+		return new KeyValueMatcher<String, Integer>(null, columnMatcher,valueMatcher,Integer.class);
+	}
+	
+	public static Matcher<Put> hasIntegerKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<Integer> valueMatcher) {
+		return new KeyValueMatcher<String, Integer>(rowKeyMatcher,
+				columnMatcher,valueMatcher,Integer.class);
+	}
+	
+	public static Matcher<Put> hasFloatKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Float> valueMatcher) {
+		return new KeyValueMatcher<String, Float>(null, columnMatcher,valueMatcher,Float.class);
+	}
+	
+	public static Matcher<Put> hasFloatKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<Float> valueMatcher) {
+		return new KeyValueMatcher<String, Float>(rowKeyMatcher,
+				columnMatcher,valueMatcher,Float.class);
+	}
+
+	public static Matcher<Put> hasShortKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Short> valueMatcher) {
+		return new KeyValueMatcher<String, Short>(null, columnMatcher,valueMatcher,Short.class);
+	}
+
+	public static Matcher<Put> hasShortKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<Short> valueMatcher) {
+		return new KeyValueMatcher<String, Short>(rowKeyMatcher,
+				columnMatcher,valueMatcher,Short.class);
+	}
+	
+	public static Matcher<Put> hasBytesKeyValue(ColumnMatcher<String> columnMatcher, Matcher<byte[]> valueMatcher) {
+		return new KeyValueMatcher<String, byte[]>(null, columnMatcher,valueMatcher,byte[].class);
+	}
+
+	public static Matcher<Put> hasBytesKeyValue(Matcher<Put> rowKeyMatcher,
+			ColumnMatcher<String> columnMatcher, Matcher<byte[]> valueMatcher) {
+		return new KeyValueMatcher<String, byte[]>(rowKeyMatcher,
+				columnMatcher,valueMatcher,byte[].class);
 	}
 }

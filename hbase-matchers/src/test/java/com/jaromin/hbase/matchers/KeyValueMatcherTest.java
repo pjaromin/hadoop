@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
 import org.apache.hadoop.hbase.client.Put;
@@ -63,4 +65,36 @@ public class KeyValueMatcherTest {
 		assertThat(put, KeyValueMatcher.hasKeyValue(PutMatchers.hasRowKey(is("rowKey")), 
 				ColumnMatcher.column(startsWith("b:lastColumn")), is("bvalue")));		
 	}	
+	
+	@Test
+	public void testNumericValues() {
+		Put put = new Put(rowKey);
+		put.add(columnFamilyA, "column1".getBytes(), Bytes.toBytes(8888L));
+		put.add(columnFamilyB, "column2".getBytes(), Bytes.toBytes(9999L));
+	
+		assertThat(put, KeyValueMatcher.hasKeyValue(
+				ColumnMatcher.column(startsWith("a:col")), 
+				is((not("avalue1")))));
+		
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("a:col")), 
+				is(8888L)));
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("a:col")), 
+				is(lessThan(8889L))));
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("a:col")), 
+				is(greaterThan(8887L))));
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("a:col")), 
+				is(not(8887L))));
+		
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("b:col")), 
+				is(9999L)));
+		assertThat(put, KeyValueMatcher.hasLongKeyValue(
+				ColumnMatcher.column(startsWith("b:col")), 
+				is(not(8888L))));
+		
+	}
 }

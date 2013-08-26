@@ -91,4 +91,52 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 	public static ColumnMatcher<String> column(String string) {
 		return column(is(string));
 	}
+
+	public static ColumnMatcher<Long> columnLong(Matcher<Long> matcher) {
+		return new ColumnMatcher<Long>(matcher, Long.class);
+	}
+
+	public static ColumnMatcher<Long> columnLong(Long value) {
+		return columnLong(is(value));
+	}
+
+	public static ColumnMatcher<Double> columnDouble(Matcher<Double> matcher) {
+		return new ColumnMatcher<Double>(matcher, Double.class);
+	}
+
+	public static ColumnMatcher<Double> columnDouble(Double Double) {
+		return columnDouble(is(Double));
+	}
+	
+	public static ColumnMatcher<Float> columnFloat(Matcher<Float> matcher) {
+		return new ColumnMatcher<Float>(matcher, Float.class);
+	}
+
+	public static ColumnMatcher<Float> columnFloat(Float Float) {
+		return columnFloat(is(Float));
+	}
+	
+	public static ColumnMatcher<Integer> columnInteger(Matcher<Integer> matcher) {
+		return new ColumnMatcher<Integer>(matcher, Integer.class);
+	}
+
+	public static ColumnMatcher<Integer> columnInteger(Integer Integer) {
+		return columnInteger(is(Integer));
+	}
+	
+	public static ColumnMatcher<Short> columnShort(Matcher<Short> matcher) {
+		return new ColumnMatcher<Short>(matcher, Short.class);
+	}
+
+	public static ColumnMatcher<Short> columnShort(Short value) {
+		return columnShort(is(value));
+	}
+	
+	public static ColumnMatcher<byte[]> columnBytes(Matcher<byte[]> matcher) {
+		return new ColumnMatcher<byte[]>(matcher, byte[].class);
+	}
+
+	public static ColumnMatcher<byte[]> columnBytes(byte[] bytes) {
+		return columnBytes(is(bytes));
+	}
 }
