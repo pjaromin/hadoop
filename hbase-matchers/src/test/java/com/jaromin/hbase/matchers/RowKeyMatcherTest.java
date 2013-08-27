@@ -1,8 +1,13 @@
 package com.jaromin.hbase.matchers;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.*;
 
+import org.apache.hadoop.hbase.client.Append;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
@@ -30,6 +35,28 @@ public class RowKeyMatcherTest {
 		assertThat(put, Matchers.hasRowKey(not(startsWith("!string_"))));
 	}
 
+	@Test
+	public void testStringKey_Append() {
+		String key = "string_key";
+		Append append = new Append(Bytes.toBytes(key));
+		assertThat(append, Matchers.hasRowKey(key));
+		
+		assertThat(append, Matchers.hasRowKey(not("not-the-key")));
+		assertThat(append, Matchers.hasRowKey(startsWith("string_")));
+		assertThat(append, Matchers.hasRowKey(not(startsWith("!string_"))));
+	}
+	
+	@Test
+	public void testStringKey_Delete() {
+		String key = "string_key";
+		Delete delete = new Delete(Bytes.toBytes(key));
+		assertThat(delete, Matchers.hasRowKey(key));
+		
+		assertThat(delete, Matchers.hasRowKey(not("not-the-key")));
+		assertThat(delete, Matchers.hasRowKey(startsWith("string_")));
+		assertThat(delete, Matchers.hasRowKey(not(startsWith("!string_"))));
+	}
+	
 	@Test
 	public void testLongKey() {
 		Long key = 9999L;

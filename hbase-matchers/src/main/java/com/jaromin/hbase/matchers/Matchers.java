@@ -89,6 +89,62 @@ public abstract class Matchers {
 		return new KeyValueMatcher<String, String>(valueMatcher,String.class);
 	}
 
+	public static ColumnMatcher<String> hasColumn(Matcher<String> matcher) {
+		return new ColumnMatcher<String>(matcher, String.class);
+	}
+
+	public static ColumnMatcher<String> hasColumn(String string) {
+		return hasColumn(is(string));
+	}
+
+	public static ColumnMatcher<Long> hasColumnLong(Matcher<Long> matcher) {
+		return new ColumnMatcher<Long>(matcher, Long.class);
+	}
+
+	public static ColumnMatcher<Long> hasColumnLong(Long value) {
+		return hasColumnLong(is(value));
+	}
+
+	public static ColumnMatcher<Double> hasColumnDouble(Matcher<Double> matcher) {
+		return new ColumnMatcher<Double>(matcher, Double.class);
+	}
+
+	public static ColumnMatcher<Double> hasColumnDouble(Double Double) {
+		return hasColumnDouble(is(Double));
+	}
+	
+	public static ColumnMatcher<Float> hasColumnFloat(Matcher<Float> matcher) {
+		return new ColumnMatcher<Float>(matcher, Float.class);
+	}
+
+	public static ColumnMatcher<Float> hasColumnFloat(Float Float) {
+		return hasColumnFloat(is(Float));
+	}
+	
+	public static ColumnMatcher<Integer> hasColumnInteger(Matcher<Integer> matcher) {
+		return new ColumnMatcher<Integer>(matcher, Integer.class);
+	}
+
+	public static ColumnMatcher<Integer> hasColumnInteger(Integer Integer) {
+		return hasColumnInteger(is(Integer));
+	}
+	
+	public static ColumnMatcher<Short> hasColumnShort(Matcher<Short> matcher) {
+		return new ColumnMatcher<Short>(matcher, Short.class);
+	}
+
+	public static ColumnMatcher<Short> hasColumnShort(Short value) {
+		return hasColumnShort(is(value));
+	}
+	
+	public static ColumnMatcher<byte[]> hasColumnBytes(Matcher<byte[]> matcher) {
+		return new ColumnMatcher<byte[]>(matcher, byte[].class);
+	}
+
+	public static ColumnMatcher<byte[]> hasColumnBytes(byte[] bytes) {
+		return hasColumnBytes(is(bytes));
+	}
+	
 	/**
 	 * 
 	 * @param columnMatcher

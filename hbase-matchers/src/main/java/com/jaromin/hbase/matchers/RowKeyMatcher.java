@@ -1,6 +1,6 @@
 package com.jaromin.hbase.matchers;
 
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Mutation;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 
@@ -9,7 +9,7 @@ import org.hamcrest.Matcher;
  * @author Patrick Jaromin <patrick@jaromin.com>
  *
  */
-public class RowKeyMatcher<T> extends FeatureMatcher<Put, T> {
+public class RowKeyMatcher<T> extends FeatureMatcher<Mutation, T> {
 
 	public static final String NAME = "Put Row Key";
 	
@@ -27,8 +27,8 @@ public class RowKeyMatcher<T> extends FeatureMatcher<Put, T> {
 	 * @see org.hamcrest.FeatureMatcher#featureValueOf(java.lang.Object)
 	 */
 	@Override
-	protected T featureValueOf(Put put) {
-		byte[] bytes = put.getRow();
+	protected T featureValueOf(Mutation mutation) {
+		byte[] bytes = mutation.getRow();
 		return (T)Matchers.valueOf(bytes, this.valueClass);
 	}
 

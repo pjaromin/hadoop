@@ -1,13 +1,12 @@
 package com.jaromin.hbase.matchers;
 
-import static org.hamcrest.Matchers.is;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Description;
@@ -20,7 +19,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  *
  * @param <T>
  */
-public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
+public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Mutation> {
 
 	private Matcher<? super T> nameMatcher;
 	
@@ -41,20 +40,20 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 	 * @see org.hamcrest.TypeSafeDiagnosingMatcher#matchesSafely(java.lang.Object, org.hamcrest.Description)
 	 */
 	@Override
-	protected boolean matchesSafely(Put put, Description mismatch) {
-		return findMatches(put, mismatch, true).size() > 0;
+	protected boolean matchesSafely(Mutation mutation, Description mismatch) {
+		return findMatches(mutation, mismatch, true).size() > 0;
 	}
 
 	/**
 	 * 
-	 * @param put
+	 * @param mutation
 	 * @param mismatch
 	 * @param stopOnFirstMatch
 	 * @return
 	 */
-	protected List<KeyValue> findMatches(Put put, Description mismatch, boolean stopOnFirstMatch) {
+	protected List<KeyValue> findMatches(Mutation mutation, Description mismatch, boolean stopOnFirstMatch) {
 		List<KeyValue> matches = new ArrayList<KeyValue>();
-		Map<byte[], List<KeyValue>> familyMap = put.getFamilyMap();
+		Map<byte[], List<KeyValue>> familyMap = mutation.getFamilyMap();
 		int count = 0;
 		String columnName;
 		for (Entry<byte[], List<KeyValue>> family : familyMap.entrySet()) {
@@ -85,59 +84,4 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Put> {
 		nameMatcher.describeTo(mismatch);
 	}
 
-	public static ColumnMatcher<String> column(Matcher<String> matcher) {
-		return new ColumnMatcher<String>(matcher, String.class);
-	}
-
-	public static ColumnMatcher<String> column(String string) {
-		return column(is(string));
-	}
-
-	public static ColumnMatcher<Long> columnLong(Matcher<Long> matcher) {
-		return new ColumnMatcher<Long>(matcher, Long.class);
-	}
-
-	public static ColumnMatcher<Long> columnLong(Long value) {
-		return columnLong(is(value));
-	}
-
-	public static ColumnMatcher<Double> columnDouble(Matcher<Double> matcher) {
-		return new ColumnMatcher<Double>(matcher, Double.class);
-	}
-
-	public static ColumnMatcher<Double> columnDouble(Double Double) {
-		return columnDouble(is(Double));
-	}
-	
-	public static ColumnMatcher<Float> columnFloat(Matcher<Float> matcher) {
-		return new ColumnMatcher<Float>(matcher, Float.class);
-	}
-
-	public static ColumnMatcher<Float> columnFloat(Float Float) {
-		return columnFloat(is(Float));
-	}
-	
-	public static ColumnMatcher<Integer> columnInteger(Matcher<Integer> matcher) {
-		return new ColumnMatcher<Integer>(matcher, Integer.class);
-	}
-
-	public static ColumnMatcher<Integer> columnInteger(Integer Integer) {
-		return columnInteger(is(Integer));
-	}
-	
-	public static ColumnMatcher<Short> columnShort(Matcher<Short> matcher) {
-		return new ColumnMatcher<Short>(matcher, Short.class);
-	}
-
-	public static ColumnMatcher<Short> columnShort(Short value) {
-		return columnShort(is(value));
-	}
-	
-	public static ColumnMatcher<byte[]> columnBytes(Matcher<byte[]> matcher) {
-		return new ColumnMatcher<byte[]>(matcher, byte[].class);
-	}
-
-	public static ColumnMatcher<byte[]> columnBytes(byte[] bytes) {
-		return columnBytes(is(bytes));
-	}
 }
