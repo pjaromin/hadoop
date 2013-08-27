@@ -29,7 +29,7 @@ public class RowKeyMatcher<T> extends FeatureMatcher<Put, T> {
 	@Override
 	protected T featureValueOf(Put put) {
 		byte[] bytes = put.getRow();
-		return (T)PutMatchers.valueOf(bytes, this.valueClass);
+		return (T)Matchers.valueOf(bytes, this.valueClass);
 	}
 
 }
