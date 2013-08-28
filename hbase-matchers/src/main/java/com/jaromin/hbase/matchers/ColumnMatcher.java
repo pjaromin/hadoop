@@ -30,7 +30,35 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
- * Matches for the presence of a column in the specified {@link Put}
+ * A {@link org.hamcrest.Matcher} for matching 
+ * {@link import org.apache.hadoop.hbase.client.Mutation} item column 
+ * names. This is designed primarily for use in JUnit/MRUnit test cases 
+ * for validating the outcome of a Map-Reduce job outputting to HBase.
+ * 
+ * The "column name" in this context actually means the string representation
+ * of the column name as expressed by the column-family name, a colon,
+ * and the column qualifier. This enables users to match against the full
+ * column using a single string matcher - including partial matches such as
+ * startsWith, endsWith, or containsString. However, because we only deal 
+ * with string representations, if your column qualifier is other than 
+ * a string, you will not be able to use this matcher.
+ * 
+ * Examples of usage:
+ * 
+ *  // For a 'put' operation...
+ *	Put put = new Put(rowKey);
+ *	put.add(Bytes.toBytes("a"), "column1".getBytes(), "avalue1".getBytes());
+ *
+ *	// These would pass the assertion
+ *	assertThat(put, hasColumn("a:column1"));
+ *	assertThat(put, hasColumn(is("a:column1")));
+ *	assertThat(put, hasColumn(startsWith("a:col")));
+ *	assertThat(put, hasColumn(not(startsWith("b:col"))));
+ *  assertThat(put, hasColumn(containsString("value")));
+ *
+ * See more usage examples in the test cases included in this package.
+ * in {@link com.jaromin.hbase.matchers.ColumnMatcherTest}
+ *
  * @author Patrick Jaromin <patrick@jaromin.com>
  *
  * @param <T>
@@ -95,6 +123,10 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Mutation> {
 		return matches;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
+	 */
 	@Override
 	public void describeTo(Description mismatch) {
 		mismatch.appendText("a column name matching ");

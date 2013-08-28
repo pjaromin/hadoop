@@ -26,6 +26,32 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+/**
+ * A {@link org.hamcrest.Matcher} for matching {@link org.apache.hadoop.hbase.KeyValue}
+ * entries in a HBase {@link org.apache.hadoop.hbase.client.Put}. This is designed
+ * primarily for use in JUnit/MRUnit test cases for validating the outcome of a 
+ * Map-Reduce job outputting to HBase.
+ * 
+ * Examples of usage:
+ * 
+ *  // For a 'put' operation...
+ *	Put put = new Put(rowKey);
+ *	put.add(Bytes.toBytes("a"), "column1".getBytes(), "avalue1".getBytes());
+ *
+ *	// These would pass the assertion
+ *	assertThat(put, hasKeyValue(hasColumn("a:column1"), "avalue1"));
+ *	assertThat(put, hasKeyValue(hasColumn("a:column1"), is("avalue1")));
+ *	assertThat(put, hasKeyValue(hasColumn(is("a:column1")), is("avalue1")));
+ *	assertThat(put, hasKeyValue(hasColumn(startsWith("a:col")), containsString("value")));
+ * 
+ * See more usage examples in the test cases included in this package.
+ * in {@link com.jaromin.hbase.matchers.KeyValueMatcherTest}
+ * 
+ * @author Patrick Jaromin <patrick@jaromin.com>
+ *
+ * @param <COL>
+ * @param <VAL>
+ */
 public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 
 	private ColumnMatcher<COL> columnMatcher;
@@ -51,6 +77,10 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.TypeSafeDiagnosingMatcher#matchesSafely(java.lang.Object, org.hamcrest.Description)
+	 */
 	@Override
 	protected boolean matchesSafely(Put put, Description mismatch) {	
 		// Delegate check for column match to 
@@ -76,6 +106,10 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
+	 */
 	@Override
 	public void describeTo(Description mismatch) {
 		mismatch.appendText("a column value matching ");

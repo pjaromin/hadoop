@@ -53,6 +53,7 @@ public class KeyValueMatcherTest {
 		put.add(columnFamilyA, "column3".getBytes(), "avalue3".getBytes());
 		put.add(columnFamilyB, "lastColumn".getBytes(), "bvalue".getBytes());
 	
+		assertThat(put, Matchers.hasKeyValue(Matchers.hasColumn("a:column1"), "avalue1"));
 		assertThat(put, Matchers.hasKeyValue(Matchers.hasColumn(startsWith("a:col")), is("avalue1")));
 		
 		assertThat(put, Matchers.hasKeyValue(Matchers.hasColumn(startsWith("a:col")), is("avalue1")));

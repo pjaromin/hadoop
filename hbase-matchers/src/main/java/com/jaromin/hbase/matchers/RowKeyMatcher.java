@@ -21,6 +21,25 @@ import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 
 /**
+ * A {@link org.hamcrest.Matcher} for matching 
+ * {@link import org.apache.hadoop.hbase.client.Mutation} item row keys. 
+ * This is designed primarily for use in JUnit/MRUnit test cases 
+ * for validating the outcome of a Map-Reduce job outputting to HBase.
+ * 
+ * This matcher will work with byte[], String, and all the primitive 
+ * wrappers.
+ * 
+ * Examples of usage:
+ * 
+ *  // For a 'put' operation...
+ *	Put put = new Put(Bytes.toBytes(99L));		
+
+ *	// These would pass the assertion
+ * 	assertThat(put, Matchers.hasRowKey(lessThan(100L), Long.class));
+ * 	assertThat(put, Matchers.hasRowKey(not(greaterThan(100L)), Long.class));
+ * 
+ * See more usage examples in the test cases included in this package
+ * in {@link com.jaromin.hbase.matchers.RowKeyMatcherTest}
  * 
  * @author Patrick Jaromin <patrick@jaromin.com>
  *

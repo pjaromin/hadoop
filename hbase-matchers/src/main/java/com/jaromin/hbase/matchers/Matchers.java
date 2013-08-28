@@ -22,7 +22,10 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Matcher;
 
-/**;
+/**
+ * Convenience class for enabling simpler importing of 
+ * the suite of matchers:
+ * <tt>import static com.jaromin.hbase.matchers.Matchers.*;</tt>
  * 
  * @author Patrick Jaromin <patrick@jaromin.com>
  *
@@ -96,15 +99,6 @@ public abstract class Matchers {
 		return hasRowKey( is(expected), Short.class);
 	}
 	
-	/**
-	 *  
-	 * @param valueMatcher
-	 * @return
-	 */
-	public static Matcher<Put> hasKeyValue(Matcher<String> valueMatcher) {
-		return new KeyValueMatcher<String, String>(valueMatcher,String.class);
-	}
-
 	public static ColumnMatcher<String> hasColumn(Matcher<String> matcher) {
 		return new ColumnMatcher<String>(matcher, String.class);
 	}
@@ -161,12 +155,14 @@ public abstract class Matchers {
 		return hasColumnBytes(is(bytes));
 	}
 	
-	/**
-	 * 
-	 * @param columnMatcher
-	 * @param valueMatcher
-	 * @return
-	 */
+	public static Matcher<Put> hasKeyValue(Matcher<String> valueMatcher) {
+		return new KeyValueMatcher<String, String>(valueMatcher,String.class);
+	}
+
+	public static Matcher<Put> hasKeyValue(ColumnMatcher<String> columnMatcher, String value) {
+		return new KeyValueMatcher<String, String>(columnMatcher,is(value),String.class);
+	}
+	
 	public static Matcher<Put> hasKeyValue(ColumnMatcher<String> columnMatcher, Matcher<String> valueMatcher) {
 		return new KeyValueMatcher<String, String>(columnMatcher,valueMatcher,String.class);
 	}
