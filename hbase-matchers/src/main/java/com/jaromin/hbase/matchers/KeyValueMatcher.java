@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.anything;
 import java.util.List;
 
 import org.apache.hadoop.hbase.KeyValue;
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Mutation;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -52,7 +52,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  * @param <COL>
  * @param <VAL>
  */
-public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
+public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Mutation> {
 
 	private ColumnMatcher<COL> columnMatcher;
 	
@@ -82,11 +82,11 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Put> {
 	 * @see org.hamcrest.TypeSafeDiagnosingMatcher#matchesSafely(java.lang.Object, org.hamcrest.Description)
 	 */
 	@Override
-	protected boolean matchesSafely(Put put, Description mismatch) {	
+	protected boolean matchesSafely(Mutation mutation, Description mismatch) {	
 		// Delegate check for column match to 
-		List<KeyValue> matchingKeyValues = columnMatcher.findMatches(put, mismatch, false);
+		List<KeyValue> matchingKeyValues = columnMatcher.findMatches(mutation, mismatch, false);
 		if (matchingKeyValues.size() == 0) {
-			columnMatcher.describeMismatch(put, mismatch);
+			columnMatcher.describeMismatch(mutation, mismatch);
 			return false;
 		}
 

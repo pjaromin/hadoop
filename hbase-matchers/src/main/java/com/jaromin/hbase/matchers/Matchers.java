@@ -18,7 +18,7 @@ package com.jaromin.hbase.matchers;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Matcher;
 
@@ -155,39 +155,39 @@ public abstract class Matchers {
 		return hasColumnBytes(is(bytes));
 	}
 	
-	public static Matcher<Put> hasKeyValue(Matcher<String> valueMatcher) {
+	public static Matcher<Mutation> hasKeyValue(Matcher<String> valueMatcher) {
 		return new KeyValueMatcher<String, String>(valueMatcher,String.class);
 	}
 
-	public static Matcher<Put> hasKeyValue(ColumnMatcher<String> columnMatcher, String value) {
+	public static Matcher<Mutation> hasKeyValue(ColumnMatcher<String> columnMatcher, String value) {
 		return new KeyValueMatcher<String, String>(columnMatcher,is(value),String.class);
 	}
 	
-	public static Matcher<Put> hasKeyValue(ColumnMatcher<String> columnMatcher, Matcher<String> valueMatcher) {
+	public static Matcher<Mutation> hasKeyValue(ColumnMatcher<String> columnMatcher, Matcher<String> valueMatcher) {
 		return new KeyValueMatcher<String, String>(columnMatcher,valueMatcher,String.class);
 	}
 
-	public static Matcher<Put> hasLongKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Long> valueMatcher) {
+	public static Matcher<Mutation> hasLongKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Long> valueMatcher) {
 		return new KeyValueMatcher<String, Long>(columnMatcher,valueMatcher,Long.class);
 	}
 
-	public static Matcher<Put> hasDoubleKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Double> valueMatcher) {
+	public static Matcher<Mutation> hasDoubleKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Double> valueMatcher) {
 		return new KeyValueMatcher<String, Double>(columnMatcher,valueMatcher,Double.class);
 	}
 	
-	public static Matcher<Put> hasIntegerKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Integer> valueMatcher) {
+	public static Matcher<Mutation> hasIntegerKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Integer> valueMatcher) {
 		return new KeyValueMatcher<String, Integer>(columnMatcher,valueMatcher,Integer.class);
 	}
 
-	public static Matcher<Put> hasFloatKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Float> valueMatcher) {
+	public static Matcher<Mutation> hasFloatKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Float> valueMatcher) {
 		return new KeyValueMatcher<String, Float>(columnMatcher,valueMatcher,Float.class);
 	}
 
-	public static Matcher<Put> hasShortKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Short> valueMatcher) {
+	public static Matcher<Mutation> hasShortKeyValue(ColumnMatcher<String> columnMatcher, Matcher<Short> valueMatcher) {
 		return new KeyValueMatcher<String, Short>(columnMatcher,valueMatcher,Short.class);
 	}
 
-	public static Matcher<Put> hasBytesKeyValue(ColumnMatcher<String> columnMatcher, Matcher<byte[]> valueMatcher) {
+	public static Matcher<Mutation> hasBytesKeyValue(ColumnMatcher<String> columnMatcher, Matcher<byte[]> valueMatcher) {
 		return new KeyValueMatcher<String, byte[]>(columnMatcher,valueMatcher,byte[].class);
 	}
 
