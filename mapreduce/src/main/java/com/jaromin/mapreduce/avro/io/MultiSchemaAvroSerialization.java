@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MultiSchemaAvroSerialization<T> extends Configured implements Serialization<AvroMultiWrapper<T>> {
 
-	public static final String CONF_KEY_MULTI_SCHEMAS = "com.dotomi.avro.mapreduce.schemas";
+	public static final String CONF_KEY_MULTI_SCHEMAS = "com.jaromin.mapreduce.avro.io.schemas";
 	
 	@Override
 	public boolean accept(Class<?> c) {

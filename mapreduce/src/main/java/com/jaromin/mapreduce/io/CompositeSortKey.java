@@ -79,7 +79,7 @@ public class CompositeSortKey<G extends WritableComparable,
 	/**
 	 * Comparator for sorting the composite key based on the partition key
 	 * and then the sort key.
-	 * @author Patrick Jaromin <pjaromin@dotomi.com>
+	 * @author Patrick Jaromin <patrick@jaromin.com>
 	 *
 	 */
 	public static final class NaturalSortComparator extends WritableComparator implements RawComparator {
@@ -103,7 +103,7 @@ public class CompositeSortKey<G extends WritableComparable,
 	/**
 	 * Comparator for sorting the composite key based on the partition key
 	 * and then the sort key.
-	 * @author Patrick Jaromin <pjaromin@dotomi.com>
+	 * @author Patrick Jaromin <patrick@jaromin.com>
 	 *
 	 */
 	public static final class ReverseSortComparator extends WritableComparator implements RawComparator {
@@ -126,7 +126,7 @@ public class CompositeSortKey<G extends WritableComparable,
 	
 	/**
 	 * Comparator for grouping based on the key's partition key, natural ordering.
-	 * @author Patrick Jaromin <pjaromin@dotomi.com>
+	 * @author Patrick Jaromin <patrick@jaromin.com>
 	 *
 	 */
 	public static final class GroupingComparator extends WritableComparator {

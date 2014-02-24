@@ -27,8 +27,8 @@ import org.apache.hadoop.mapreduce.Job;
 public class CompositeSortKeySerialization<G extends WritableComparable<G>, S extends WritableComparable<S>>
 	extends Configured implements Serialization<CompositeSortKey<G, S>> {
 	
-	public static final String CONF_KEY_GROUPKEY_CLASS = "com.dotomi.mapreduce.common.io.compositekey.groupclass";
-	public static final String CONF_KEY_SORTKEY_CLASS = "com.dotomi.mapreduce.common.io.compositekey.sortclass";
+	public static final String CONF_KEY_GROUPKEY_CLASS = "com.jaromin.mapreduce.io.compositekey.groupclass";
+	public static final String CONF_KEY_SORTKEY_CLASS = "com.jaromin.mapreduce.io.compositekey.sortclass";
 	
 	private Serializer<CompositeSortKey<G, S>> serializer;
 	private Deserializer<CompositeSortKey<G, S>> deserializer;
