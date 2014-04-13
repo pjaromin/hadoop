@@ -118,7 +118,7 @@ public class CompositeSortKey<G extends WritableComparable,
 			CompositeSortKey key2 = (CompositeSortKey) wc2;
 			int compare = key1.getGroupKey().compareTo(key2.getGroupKey());
 			if (compare == 0) {
-				compare = key2.getSortKey().compareTo(key1.getSortKey());
+				compare = key1.getSortKey().compareTo(key2.getSortKey()) * -1;
 			}
 			return compare;
 		}
@@ -151,7 +151,8 @@ public class CompositeSortKey<G extends WritableComparable,
 	public static final class KeyPartitioner<T> extends Partitioner<CompositeSortKey, T> {
 		@Override
 		public int getPartition(CompositeSortKey key, T value, int numPartitions) {
-			return Math.abs(key.getGroupKey().hashCode()) % numPartitions;
+			// Need to protect against negative numbers and Integer.MIN_VALUE
+			return (key.getGroupKey().hashCode() & Integer.MAX_VALUE) % numPartitions;
 		}
 	}
 }

@@ -150,11 +150,17 @@ public class CompositeSortKeySerialization<G extends WritableComparable<G>, S ex
 				throws IOException {
 			if (reuse == null) {
 				reuse = new CompositeSortKey<G, S>();
+			}
+
+			if (reuse.getGroupKey() == null) {
 				try {
 					reuse.setGroupKey(groupKeyClass.newInstance());
 				} catch (InstantiationException | IllegalAccessException e) {
 					throw new IOException("Unable to instantiate '" + groupKeyClass + "'");
 				}
+			}
+
+			if (reuse.getSortKey() == null) {
 				try {
 					reuse.setSortKey(sortKeyClass.newInstance());
 				} catch (InstantiationException | IllegalAccessException e) {

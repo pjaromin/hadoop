@@ -18,7 +18,7 @@ import org.apache.hadoop.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CompositeSortKeyTextIntTest {
+public class CompositeSortKeyTest {
 
 	private TestMapper mapper;
 	private TestReducer reducer;
